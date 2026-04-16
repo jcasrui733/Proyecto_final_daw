@@ -3,7 +3,7 @@ from datetime import date, time
 from django.contrib.auth.models import User
 from django.test import TestCase
 
-from gestion.models import Aula, PerfilUsuario, Reserva
+from gestion.models import Aula, Incidencia, PerfilUsuario, Reserva
 
 
 class ReservaRulesTests(TestCase):
@@ -96,3 +96,37 @@ class ReservaRulesTests(TestCase):
         )
 
         self.assertEqual(reserva_conflicto.estado, Reserva.Estado.DENEGADA)
+
+    def test_dashboard_profesor_muestra_contadores_actualizados(self):
+        Reserva.objects.create(
+            aula=self.aula_1,
+            usuario=self.user_a,
+            fecha=date.today(),
+            hora_inicio=time(9, 0),
+            hora_fin=time(10, 0),
+            motivo="Clase 1",
+            estado=Reserva.Estado.PENDIENTE,
+        )
+        Reserva.objects.create(
+            aula=self.aula_2,
+            usuario=self.user_a,
+            fecha=date.today(),
+            hora_inicio=time(10, 0),
+            hora_fin=time(11, 0),
+            motivo="Clase 2",
+            estado=Reserva.Estado.PENDIENTE,
+        )
+        Incidencia.objects.create(
+            aula=self.aula_1,
+            usuario=self.user_a,
+            tipo="Proyector",
+            prioridad="Alta",
+            descripcion="No funciona",
+            estado="Pendiente",
+        )
+
+        response = self.client.get("/dashboard-profesor/?user_email=a@test.es")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.context["total_reservas"], 2)
+        self.assertEqual(response.context["total_incidencias_pendientes"], 1)

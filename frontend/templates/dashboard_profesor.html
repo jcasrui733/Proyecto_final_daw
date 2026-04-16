@@ -9,7 +9,7 @@
         </div>
         <div class="header-right">
             <button class="hamburger-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
-            <span class="usuario-actual" id="usuarioActual"></span>
+            <span class="usuario-actual" id="usuarioActual">{{ nombre_usuario }}</span>
             <button class="btn-logout" onclick="logout()">Salir</button>
         </div>
     </div>
@@ -28,7 +28,7 @@
 
     <main class="content">
         <div class="page-header">
-            <h1>Bienvenido, <span id="usuarioNombre"></span></h1>
+            <h1>Bienvenido, <span id="usuarioNombre">{{ nombre_usuario }}</span></h1>
             <p>Panel principal de reservas e incidencias</p>
         </div>
 
@@ -37,7 +37,7 @@
                 <div class="card-icon reservas"><i class="bi bi-calendar-event"></i></div>
                 <div class="card-content">
                     <h3>Mis reservas</h3>
-                    <p class="stat-number" id="totalReservas">0</p>
+                    <p class="stat-number" id="totalReservas">{{ total_reservas }}</p>
                 </div>
                 <a href="{% url 'mis_reservas' %}?user_email={{ user_email }}" class="card-link">Ver</a>
             </div>
@@ -46,7 +46,7 @@
                 <div class="card-icon incidencias"><i class="bi bi-exclamation-triangle"></i></div>
                 <div class="card-content">
                     <h3>Incidencias pendientes</h3>
-                    <p class="stat-number" id="totalIncidencias">0</p>
+                    <p class="stat-number" id="totalIncidencias">{{ total_incidencias_pendientes }}</p>
                 </div>
                 <a href="{% url 'historial_incidencias' %}?user_email={{ user_email }}" class="card-link">Ver</a>
             </div>
@@ -55,7 +55,7 @@
                 <div class="card-icon aulas"><i class="bi bi-building"></i></div>
                 <div class="card-content">
                     <h3>Aulas disponibles</h3>
-                    <p class="stat-number" id="aulasDisponibles">0</p>
+                    <p class="stat-number" id="aulasDisponibles">{{ aulas_disponibles }}</p>
                 </div>
                 <a href="{% url 'buscar_aulas' %}?user_email={{ user_email }}" class="card-link card-link-explore">Explorar</a>
             </div>
@@ -63,12 +63,38 @@
 
         <section class="upcoming-section">
             <h2>Proximas reservas</h2>
-            <div id="proximasReservas" class="reservas-list"></div>
+            <div id="proximasReservas" class="reservas-list">
+                {% for reserva in proximas_reservas %}
+                <div class="reserva-item">
+                    <div class="item-info">
+                        <h3>{{ reserva.aula.nombre }}</h3>
+                        <p>{{ reserva.fecha|date:"d/m/Y" }} | {{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</p>
+                        <p style="color: var(--gray-600);">{{ reserva.motivo }}</p>
+                    </div>
+                    <span class="item-status {% if reserva.estado == 'Confirmada' %}status-available{% elif reserva.estado == 'Pendiente' %}status-occupied{% else %}status-maintenance{% endif %}">{{ reserva.estado }}</span>
+                </div>
+                {% empty %}
+                <p class="empty-state">No hay reservas próximas</p>
+                {% endfor %}
+            </div>
         </section>
 
         <section class="recent-section">
             <h2>Incidencias recientes</h2>
-            <div id="incidenciasRecientes" class="incidencias-list"></div>
+            <div id="incidenciasRecientes" class="incidencias-list">
+                {% for incidencia in incidencias_recientes %}
+                <div class="incidencia-item">
+                    <div class="item-info">
+                        <h3>{{ incidencia.tipo }}</h3>
+                        <p>{{ incidencia.aula.nombre }} | {{ incidencia.fecha|date:"d/m/Y" }}</p>
+                        <p style="color: var(--gray-600);">{{ incidencia.descripcion }}</p>
+                    </div>
+                    <span class="item-status {% if incidencia.estado == 'Pendiente' %}status-pendiente{% elif incidencia.estado == 'En curso' %}status-en-curso{% else %}status-resuelta{% endif %}">{{ incidencia.estado }}</span>
+                </div>
+                {% empty %}
+                <p class="empty-state">No hay incidencias registradas</p>
+                {% endfor %}
+            </div>
         </section>
     </main>
 </div>
@@ -76,5 +102,4 @@
 
 {% block scripts %}
 <script src="/static/app.js?v=2"></script>
-<script src="/static/dashboard-profesor.js"></script>
 {% endblock %}

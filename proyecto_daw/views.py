@@ -217,7 +217,32 @@ def api_login(request):
 
 
 def dashboard_profesor(request):
-    return render(request, "dashboard_profesor.html", {"user_email": get_user_email_from_request(request)})
+    user_email = get_user_email_from_request(request)
+    user = User.objects.filter(email__iexact=user_email).first() if user_email else None
+
+    reservas_usuario = Reserva.objects.none()
+    incidencias_usuario = Incidencia.objects.none()
+    nombre_usuario = ""
+
+    if user:
+        reservas_usuario = Reserva.objects.select_related("aula").filter(usuario=user)
+        incidencias_usuario = Incidencia.objects.select_related("aula").filter(usuario=user)
+        nombre_usuario = full_name(user)
+
+    hoy = timezone.localdate()
+    proximas_reservas = reservas_usuario.exclude(estado__in=["Cancelada", "Denegada"]).filter(fecha__gte=hoy).order_by("fecha", "hora_inicio")[:5]
+    incidencias_recientes = incidencias_usuario.order_by("-fecha")[:5]
+
+    context = {
+        "user_email": user_email,
+        "nombre_usuario": nombre_usuario,
+        "total_reservas": reservas_usuario.count(),
+        "total_incidencias_pendientes": incidencias_usuario.filter(estado="Pendiente").count(),
+        "aulas_disponibles": Aula.objects.filter(estado="Disponible").count(),
+        "proximas_reservas": proximas_reservas,
+        "incidencias_recientes": incidencias_recientes,
+    }
+    return render(request, "dashboard_profesor.html", context)
 
 
 def dashboard_admin(request):
@@ -291,7 +316,6 @@ def buscar_aulas(request):
 
 
 def mis_reservas(request):
-    seed_demo_data()
     user_email = get_user_email_from_request(request)
     reservas = Reserva.objects.select_related("aula", "usuario", "usuario__perfil").order_by("-fecha", "hora_inicio")
     if user_email:
