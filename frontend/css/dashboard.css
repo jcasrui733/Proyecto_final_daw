@@ -1,0 +1,800 @@
+﻿/* ==================== LAYOUT GENERAL ==================== */
+
+.header {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    color: var(--white);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-md);
+    border-bottom: 1px solid #334155;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1400px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+    color: #f8fafc;
+}
+
+.logo img {
+    display: block;
+    max-height: 60px;
+    width: auto;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+}
+
+.hamburger-btn {
+    display: none;
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: var(--radius-md);
+    width: 36px;
+    height: 36px;
+    font-size: 1.05rem;
+    cursor: pointer;
+}
+
+.hamburger-btn:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+.usuario-actual {
+    font-size: var(--font-size-sm);
+    color: #cbd5e1;
+    opacity: 1;
+}
+
+.btn-logout {
+    background-color: rgba(255, 255, 255, 0.12);
+    color: var(--white);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: var(--spacing-sm) var(--spacing-lg);
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-size: var(--font-size-sm);
+    transition: all 0.3s ease;
+}
+
+.btn-logout:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+}
+
+/* ==================== CONTENEDOR PRINCIPAL ==================== */
+
+.main-container {
+    display: flex;
+    max-width: 1400px;
+    margin: 0 auto;
+    padding-top: 88px;
+}
+
+/* ==================== SIDEBAR ==================== */
+
+.sidebar {
+    width: 250px;
+    background-color: var(--white);
+    border-right: 1px solid var(--gray-200);
+    padding: var(--spacing-lg) 0;
+    position: sticky;
+    top: 88px;
+    height: calc(100vh - 88px);
+    overflow-y: auto;
+}
+
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+}
+
+.nav-item {
+    display: block;
+    padding: var(--spacing-md) var(--spacing-lg);
+    color: var(--gray-700);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border-left: 3px solid transparent;
+}
+
+.nav-item:hover {
+    background-color: var(--gray-100);
+    color: var(--primary-color);
+}
+
+.nav-item.active {
+    background-color: var(--gray-100);
+    color: var(--primary-color);
+    border-left-color: var(--primary-color);
+}
+
+/* ==================== CONTENIDO PRINCIPAL ==================== */
+
+.content {
+    flex: 1;
+    padding: var(--spacing-2xl);
+}
+
+.page-header {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.page-header h1 {
+    font-size: var(--font-size-2xl);
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-sm);
+}
+
+.page-header p {
+    color: var(--gray-500);
+    font-size: var(--font-size-sm);
+}
+
+/* ==================== TARJETAS ==================== */
+
+.card {
+    background-color: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    padding: var(--spacing-lg);
+    box-shadow: var(--shadow-sm);
+    transition: all 0.3s ease;
+}
+
+.card:hover {
+    box-shadow: var(--shadow-md);
+    border-color: var(--gray-300);
+}
+
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.card-stat {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-lg);
+    position: relative;
+}
+
+.card-icon {
+    font-size: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 70px;
+    height: 70px;
+    border-radius: var(--radius-lg);
+    flex-shrink: 0;
+}
+
+.card-icon.reservas {
+    background-color: rgba(var(--primary-rgb), 0.12);
+}
+
+.card-icon.incidencias {
+    background-color: rgba(245, 158, 11, 0.1);
+}
+
+.card-icon.aulas {
+    background-color: rgba(16, 185, 129, 0.1);
+}
+
+.card-content {
+    flex: 1;
+}
+
+.card-content h3 {
+    font-size: var(--font-size-sm);
+    color: var(--gray-600);
+    margin-bottom: var(--spacing-sm);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.stat-number {
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    color: var(--gray-900);
+}
+
+.card-link {
+    position: absolute;
+    top: var(--spacing-lg);
+    right: var(--spacing-lg);
+    color: var(--primary-color);
+    text-decoration: none;
+    font-size: var(--font-size-sm);
+    font-weight: 600;
+    transition: all 0.3s ease;
+}
+
+.card-link-explore {
+    top: auto;
+    bottom: var(--spacing-lg);
+}
+
+.card-link:hover {
+    color: var(--primary-dark);
+    text-decoration: underline;
+}
+
+/* ==================== ACCIONES RÁPIDAS ==================== */
+
+.quick-actions {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.quick-actions h2 {
+    font-size: var(--font-size-lg);
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-lg);
+}
+
+.actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--spacing-lg);
+}
+
+.action-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: var(--spacing-xl);
+    background-color: var(--white);
+    border: 2px solid var(--gray-200);
+    border-radius: var(--radius-lg);
+    text-decoration: none;
+    color: var(--gray-700);
+    transition: all 0.3s ease;
+    text-align: center;
+    font-weight: 500;
+}
+
+.action-btn:hover {
+    border-color: var(--primary-color);
+    color: var(--primary-color);
+    background-color: var(--gray-50);
+}
+
+.action-icon {
+    font-size: 2rem;
+    margin-bottom: var(--spacing-md);
+}
+
+/* ==================== SECCIONES ==================== */
+
+.upcoming-section,
+.recent-section {
+    margin-bottom: var(--spacing-2xl);
+}
+
+.upcoming-section h2,
+.recent-section h2 {
+    font-size: var(--font-size-lg);
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-lg);
+}
+
+.reservas-list,
+.incidencias-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--spacing-md);
+}
+
+.empty-state {
+    text-align: center;
+    padding: var(--spacing-2xl);
+    color: var(--gray-500);
+    background-color: var(--gray-100);
+    border-radius: var(--radius-lg);
+}
+
+.tag {
+    padding: 0.3rem 0.55rem;
+    background-color: var(--gray-100);
+    border-radius: 999px;
+    font-size: var(--font-size-xs);
+    color: var(--gray-700);
+}
+
+.reserva-item,
+.incidencia-item {
+    background-color: var(--white);
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: var(--spacing-lg);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.item-info h3 {
+    color: var(--gray-900);
+    margin-bottom: var(--spacing-xs);
+}
+
+.item-info p {
+    color: var(--gray-500);
+    font-size: var(--font-size-sm);
+}
+
+.item-status {
+    display: inline-block;
+    padding: var(--spacing-sm) var(--spacing-md);
+    border-radius: var(--radius-sm);
+    font-size: var(--font-size-xs);
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-resuelta {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.status-pendiente {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+}
+
+.status-en-curso {
+    background-color: rgba(var(--primary-rgb), 0.12);
+    color: var(--primary-dark);
+}
+
+/* Buscar aulas: unificar aspecto de filtros (fecha, tramo y capacidad) */
+#fechaBusqueda,
+#tramoBusqueda,
+#capacidadMinima {
+    height: 44px;
+    min-height: 44px;
+    line-height: 1.2;
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+}
+
+#fechaBusqueda {
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.reservas-dia-list {
+    display: grid;
+    gap: 0.6rem;
+}
+
+.reserva-dia-item {
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-md);
+    padding: 0.7rem 0.85rem;
+    background-color: var(--gray-100);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8rem;
+}
+
+.reserva-dia-item-main {
+    display: grid;
+    gap: 0.15rem;
+}
+
+.reserva-dia-item-main strong {
+    color: var(--gray-900);
+    font-size: var(--font-size-sm);
+}
+
+.reserva-dia-item-main span {
+    color: var(--gray-600);
+    font-size: var(--font-size-xs);
+}
+
+.reservas-dia-vacio {
+    color: var(--gray-500);
+    font-size: var(--font-size-sm);
+}
+
+/* Ajuste puntual: en Buscar aulas el select de tramo se mantiene claro en modo oscuro */
+[data-theme="dark"] #tramoBusqueda,
+[data-theme="dark"] #tramoBusqueda option,
+[data-theme="dark"] #fechaBusqueda,
+[data-theme="dark"] #capacidadMinima {
+    background-color: #ffffff;
+    color: #111827;
+}
+
+/* ==================== TABLAS Y GESTION ==================== */
+
+.table-card {
+    overflow-x: auto;
+}
+
+.data-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.data-table th,
+.data-table td {
+    padding: var(--spacing-md);
+    text-align: left;
+    border-bottom: 1px solid var(--gray-200);
+    vertical-align: top;
+}
+
+.data-table th {
+    font-size: var(--font-size-xs);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
+    background-color: var(--gray-100);
+}
+
+.data-table tbody tr:hover {
+    background-color: var(--gray-50);
+}
+
+.status-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    font-size: var(--font-size-xs);
+    font-weight: 700;
+}
+
+.status-available {
+    background-color: rgba(16, 185, 129, 0.1);
+    color: #059669;
+}
+
+.status-occupied {
+    background-color: rgba(var(--primary-rgb), 0.12);
+    color: var(--primary-dark);
+}
+
+.status-maintenance {
+    background-color: rgba(245, 158, 11, 0.1);
+    color: #d97706;
+}
+
+.status-role {
+    background-color: rgba(14, 165, 233, 0.1);
+    color: #0369a1;
+}
+
+.management-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: var(--spacing-lg);
+    margin-bottom: var(--spacing-2xl);
+}
+
+.management-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--spacing-sm);
+}
+
+.action-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: auto;
+    min-width: 132px;
+    padding: 0.72rem 1rem;
+    border: none;
+    border-radius: var(--radius-md);
+    background-color: var(--primary-color);
+    color: var(--white);
+    text-decoration: none;
+    font-size: 0.92rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.action-button:hover {
+    background-color: var(--primary-dark);
+}
+
+.action-button:active {
+    transform: scale(0.98);
+}
+
+.crud-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--spacing-md);
+    flex-wrap: wrap;
+}
+
+.crud-toolbar h2 {
+    font-size: var(--font-size-lg);
+    color: var(--gray-900);
+}
+
+#aulaForm .aula-form-actions {
+    align-items: center;
+}
+
+#aulaForm .aula-form-actions .action-button {
+    width: auto;
+    min-width: 110px;
+    padding: 0.55rem 0.9rem;
+    font-size: var(--font-size-sm);
+}
+
+#usuarioForm .management-actions .action-button {
+    width: auto;
+    min-width: 110px;
+    padding: 0.55rem 0.9rem;
+    font-size: var(--font-size-sm);
+}
+
+/* ==================== RESPONSIVE ==================== */
+
+@media (max-width: 1024px) {
+    .main-container {
+        max-width: 100%;
+    }
+
+    .header-content {
+        width: 100%;
+    }
+
+    .sidebar {
+        width: min(82vw, 320px);
+        height: 100vh;
+        border-right: 1px solid var(--gray-200);
+        border-bottom: none;
+        padding: var(--spacing-lg) 0;
+        position: fixed;
+        top: 0;
+        left: 0;
+        z-index: 320;
+        display: block;
+        transform: translateX(-102%);
+        transition: transform 0.25s ease;
+        box-shadow: var(--shadow-lg);
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    body.sidebar-open::before {
+        content: "";
+        position: fixed;
+        inset: 0;
+        background-color: rgba(15, 23, 42, 0.48);
+        z-index: 310;
+    }
+
+    .nav-menu {
+        flex-direction: column;
+        overflow-x: visible;
+    }
+
+    .nav-item {
+        white-space: normal;
+        border-left: 3px solid transparent;
+        border-bottom: none;
+    }
+
+    .nav-item.active {
+        border-left: 3px solid var(--primary-color);
+        border-bottom-color: transparent;
+    }
+
+    .hamburger-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .content {
+        padding: var(--spacing-lg);
+        width: 100%;
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .actions-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 0.9rem;
+    }
+
+    .page-header {
+        margin-bottom: var(--spacing-lg);
+    }
+
+}
+
+@media (max-width: 640px) {
+    .header {
+        padding: 0.75rem;
+    }
+
+    .main-container {
+        padding-top: 76px;
+    }
+
+    .header-content {
+        gap: 0.5rem;
+    }
+
+    .logo img {
+        max-height: 44px !important;
+        margin-right: 8px !important;
+    }
+
+    .header-right {
+        gap: 0.45rem;
+    }
+
+    .btn-logout {
+        padding: 0.42rem 0.58rem;
+        font-size: 0.78rem;
+    }
+
+    .usuario-actual {
+        display: none;
+    }
+
+    .page-header h1 {
+        font-size: var(--font-size-lg);
+    }
+
+    .page-header p {
+        font-size: 0.82rem;
+    }
+
+    .actions-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .management-grid {
+        grid-template-columns: 1fr;
+        gap: 0.75rem;
+        margin-bottom: var(--spacing-lg);
+    }
+
+    .table-card {
+        overflow: visible;
+        padding: 0;
+        border: none;
+        background: transparent;
+        box-shadow: none;
+    }
+
+    .data-table {
+        min-width: 0;
+    }
+
+    .data-table thead {
+        display: none;
+    }
+
+    .data-table,
+    .data-table tbody,
+    .data-table tr,
+    .data-table td {
+        display: block;
+        width: 100%;
+    }
+
+    .data-table tr {
+        background-color: var(--white);
+        border: 1px solid var(--gray-200);
+        border-radius: var(--radius-md);
+        padding: 0.55rem 0.7rem;
+        margin-bottom: 0.7rem;
+        box-shadow: var(--shadow-sm);
+    }
+
+    .data-table td {
+        border-bottom: 1px dashed var(--gray-200);
+        padding: 0.5rem 0;
+        text-align: left;
+    }
+
+    .data-table td:last-child {
+        border-bottom: none;
+    }
+
+    .data-table td::before {
+        content: attr(data-label);
+        display: block;
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.04em;
+        color: var(--gray-500);
+        margin-bottom: 0.2rem;
+        font-weight: 700;
+    }
+
+    .management-actions {
+        width: 100%;
+    }
+
+    .action-button {
+        width: 100%;
+        min-width: 0;
+        padding: 0.62rem 0.75rem;
+        font-size: 0.85rem;
+    }
+
+    .status-pill {
+        width: fit-content;
+    }
+
+    .card-stat {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .card-icon {
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+
+    .card-link {
+        position: static;
+        margin-top: var(--spacing-md);
+    }
+
+    .reserva-item,
+    .incidencia-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .item-status {
+        margin-top: var(--spacing-md);
+    }
+
+    .reserva-dia-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+}
+

@@ -1,0 +1,80 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block title %}Inicio Profesor{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo">
+        </div>
+        <div class="header-right">
+            <button class="hamburger-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+            <span class="usuario-actual" id="usuarioActual"></span>
+            <button class="btn-logout" onclick="logout()">Salir</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar" id="sidebarNav">
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard_profesor' %}?user_email={{ user_email }}" class="nav-item active">Inicio</a>
+            <a href="{% url 'buscar_aulas' %}?user_email={{ user_email }}" class="nav-item">Buscar aulas</a>
+            <a href="{% url 'mis_reservas' %}?user_email={{ user_email }}" class="nav-item">Mis reservas</a>
+            <a href="{% url 'registrar_incidencia' %}?user_email={{ user_email }}" class="nav-item">Registrar incidencia</a>
+            <a href="{% url 'historial_incidencias' %}?user_email={{ user_email }}" class="nav-item">Historial de incidencias</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <div class="page-header">
+            <h1>Bienvenido, <span id="usuarioNombre"></span></h1>
+            <p>Panel principal de reservas e incidencias</p>
+        </div>
+
+        <section class="dashboard-grid">
+            <div class="card card-stat">
+                <div class="card-icon reservas"><i class="bi bi-calendar-event"></i></div>
+                <div class="card-content">
+                    <h3>Mis reservas</h3>
+                    <p class="stat-number" id="totalReservas">0</p>
+                </div>
+                <a href="{% url 'mis_reservas' %}?user_email={{ user_email }}" class="card-link">Ver</a>
+            </div>
+
+            <div class="card card-stat">
+                <div class="card-icon incidencias"><i class="bi bi-exclamation-triangle"></i></div>
+                <div class="card-content">
+                    <h3>Incidencias pendientes</h3>
+                    <p class="stat-number" id="totalIncidencias">0</p>
+                </div>
+                <a href="{% url 'historial_incidencias' %}?user_email={{ user_email }}" class="card-link">Ver</a>
+            </div>
+
+            <div class="card card-stat">
+                <div class="card-icon aulas"><i class="bi bi-building"></i></div>
+                <div class="card-content">
+                    <h3>Aulas disponibles</h3>
+                    <p class="stat-number" id="aulasDisponibles">0</p>
+                </div>
+                <a href="{% url 'buscar_aulas' %}?user_email={{ user_email }}" class="card-link card-link-explore">Explorar</a>
+            </div>
+        </section>
+
+        <section class="upcoming-section">
+            <h2>Proximas reservas</h2>
+            <div id="proximasReservas" class="reservas-list"></div>
+        </section>
+
+        <section class="recent-section">
+            <h2>Incidencias recientes</h2>
+            <div id="incidenciasRecientes" class="incidencias-list"></div>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/app.js?v=2"></script>
+<script src="/static/dashboard-profesor.js"></script>
+{% endblock %}

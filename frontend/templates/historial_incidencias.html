@@ -1,0 +1,113 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block title %}Historial de incidencias{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo">
+        </div>
+        <div class="header-right">
+            <button class="hamburger-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+            <span class="usuario-actual" id="usuarioActual"></span>
+            <button class="btn-logout" onclick="logout()">Salir</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar" id="sidebarNav">
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard_profesor' %}?user_email={{ user_email }}" class="nav-item">Inicio</a>
+            <a href="{% url 'buscar_aulas' %}?user_email={{ user_email }}" class="nav-item">Buscar aulas</a>
+            <a href="{% url 'mis_reservas' %}?user_email={{ user_email }}" class="nav-item">Mis reservas</a>
+            <a href="{% url 'registrar_incidencia' %}?user_email={{ user_email }}" class="nav-item">Registrar incidencia</a>
+            <a href="{% url 'historial_incidencias' %}?user_email={{ user_email }}" class="nav-item active">Historial de incidencias</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <div class="page-header">
+            <h1>Historial de incidencias</h1>
+            <p>Seguimiento del estado de incidencias registradas.</p>
+        </div>
+
+        {% if messages %}
+        <section class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--primary-color);">
+            {% for message in messages %}
+            <p style="margin: 0; color: var(--gray-700);">{{ message }}</p>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <section class="management-grid">
+            <div class="card card-stat">
+                <div class="card-icon incidencias"><i class="bi bi-exclamation-triangle"></i></div>
+                <div class="card-content">
+                    <h3>Pendientes</h3>
+                    <p class="stat-number">{{ incidencias_abiertas }}</p>
+                </div>
+            </div>
+            <div class="card card-stat">
+                <div class="card-icon reservas"><i class="bi bi-tools"></i></div>
+                <div class="card-content">
+                    <h3>En curso</h3>
+                    <p class="stat-number">{{ incidencias_en_curso }}</p>
+                </div>
+            </div>
+            <div class="card card-stat">
+                <div class="card-icon aulas"><i class="bi bi-check-circle"></i></div>
+                <div class="card-content">
+                    <h3>Resueltas</h3>
+                    <p class="stat-number">{{ incidencias_resueltas }}</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card table-card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Fecha</th>
+                        <th>Aula</th>
+                        <th>Tipo</th>
+                        <th>Prioridad</th>
+                        <th>Estado</th>
+                        <th>Acción</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for incidencia in incidencias %}
+                    <tr data-incidencia-id="{{ incidencia.id }}">
+                        <td>{{ incidencia.fecha|date:"d/m/Y" }}</td>
+                        <td>{{ incidencia.aula.nombre }}</td>
+                        <td>{{ incidencia.tipo }}</td>
+                        <td>{{ incidencia.prioridad }}</td>
+                        <td><span class="status-pill {% if incidencia.estado == 'Pendiente' %}status-pendiente{% elif incidencia.estado == 'En curso' %}status-en-curso{% else %}status-resuelta{% endif %}">{{ incidencia.estado }}</span></td>
+                        <td><button class="action-button action-button-primary" type="button">Ver</button></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">No hay incidencias registradas.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/app.js?v=2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const usuario = getUsuarioActual();
+    if (!usuario) {
+        window.location.href = '/';
+        return;
+    }
+    document.getElementById('usuarioActual').textContent = usuario.nombre;
+});
+</script>
+{% endblock %}

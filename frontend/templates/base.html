@@ -1,0 +1,75 @@
+﻿{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Gestor de Aulas{% endblock %}</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <script>
+        (function () {
+            const savedTheme = localStorage.getItem("themeMode");
+            if (savedTheme === "dark") {
+                document.documentElement.setAttribute("data-theme", "dark");
+            }
+        })();
+    </script>
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    {% block dashboard_css %}
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+    {% endblock %}
+    {% block page_css %}{% endblock %}
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+    <div id="detailModal" class="detail-modal" aria-hidden="true">
+        <div id="detailModalBackdrop" class="detail-modal-backdrop"></div>
+        <div class="detail-modal-panel" role="dialog" aria-modal="true" aria-labelledby="detailModalTitle">
+            <div class="detail-modal-header">
+                <h3 id="detailModalTitle">Detalle</h3>
+                <button id="detailModalClose" type="button" class="detail-modal-close" aria-label="Cerrar detalle">
+                    <i class="bi bi-x-lg"></i>
+                </button>
+            </div>
+            <div id="detailModalBody" class="detail-modal-body"></div>
+        </div>
+    </div>
+
+    <div id="toastContainer" class="toast-container"></div>
+
+    <button id="themeToggle" class="theme-toggle" type="button" aria-label="Cambiar modo oscuro">
+        <i class="bi bi-moon-stars-fill" id="themeToggleIcon"></i>
+    </button>
+
+    <script src="{% static 'ui-interactions.js' %}?v=6"></script>
+    {% block scripts %}{% endblock %}
+    <script>
+        (function () {
+            const toggleButton = document.getElementById("themeToggle");
+            const toggleIcon = document.getElementById("themeToggleIcon");
+
+            if (!toggleButton || !toggleIcon) {
+                return;
+            }
+
+            const isDark = document.documentElement.getAttribute("data-theme") === "dark";
+            toggleIcon.className = isDark ? "bi bi-sun-fill" : "bi bi-moon-stars-fill";
+
+            toggleButton.addEventListener("click", function () {
+                const darkModeActive = document.documentElement.getAttribute("data-theme") === "dark";
+
+                if (darkModeActive) {
+                    document.documentElement.removeAttribute("data-theme");
+                    localStorage.setItem("themeMode", "light");
+                    toggleIcon.className = "bi bi-moon-stars-fill";
+                } else {
+                    document.documentElement.setAttribute("data-theme", "dark");
+                    localStorage.setItem("themeMode", "dark");
+                    toggleIcon.className = "bi bi-sun-fill";
+                }
+            });
+        })();
+    </script>
+</body>
+</html>

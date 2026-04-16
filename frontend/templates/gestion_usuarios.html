@@ -1,0 +1,167 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block title %}Gestión de usuarios{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo">
+            Administrador
+        </div>
+        <div class="header-right">
+            <button class="hamburger-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+            <span class="usuario-actual" id="usuarioActual"></span>
+            <button class="btn-logout" onclick="logout()">Salir</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar" id="sidebarNav">
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard_admin' %}?user_email={{ user_email }}" class="nav-item">Inicio</a>
+            <a href="{% url 'gestion_aulas' %}?user_email={{ user_email }}" class="nav-item">Gestión de aulas</a>
+            <a href="{% url 'gestion_reservas' %}?user_email={{ user_email }}" class="nav-item">Gestión de reservas</a>
+            <a href="{% url 'gestion_incidencias' %}?user_email={{ user_email }}" class="nav-item">Gestión de incidencias</a>
+            <a href="{% url 'gestion_usuarios' %}?user_email={{ user_email }}" class="nav-item active">Gestión de usuarios</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <div class="page-header">
+            <h1>Gestión de usuarios</h1>
+            <p>Control de cuentas de profesorado y administración.</p>
+        </div>
+
+        {% if messages %}
+        <section class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--primary-color);">
+            {% for message in messages %}
+            <p style="margin: 0; color: var(--gray-700);">{{ message }}</p>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+    <section class="management-grid">
+        <div class="card card-stat">
+            <div class="card-icon aulas"><i class="bi bi-people"></i></div>
+            <div class="card-content">
+                <h3>Usuarios activos</h3>
+                <p class="stat-number">{{ total_usuarios }}</p>
+            </div>
+        </div>
+        <div class="card card-stat">
+            <div class="card-icon reservas"><i class="bi bi-mortarboard"></i></div>
+            <div class="card-content">
+                <h3>Profesorado</h3>
+                <p class="stat-number">{{ total_profesorado }}</p>
+            </div>
+        </div>
+        <div class="card card-stat">
+            <div class="card-icon incidencias"><i class="bi bi-shield-lock"></i></div>
+            <div class="card-content">
+                <h3>Administradores</h3>
+                <p class="stat-number">{{ total_administradores }}</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" style="margin-bottom: 1rem;">
+        <div class="crud-toolbar">
+            <h2>Administrar usuarios</h2>
+            <div class="management-actions">
+                <button id="btnNuevoUsuario" class="action-button action-button-primary" type="button">Añadir usuario</button>
+            </div>
+        </div>
+
+        <form id="usuarioForm" class="management-grid" style="margin-top: 1rem; display: none;" method="post" action="{% url 'gestion_usuarios' %}?user_email={{ user_email }}" data-backend-save="true">
+            {% csrf_token %}
+            <input type="hidden" name="user_email" value="{{ user_email }}">
+            <input id="usuarioEditIndex" name="usuario_id" type="hidden" value="">
+            <div class="form-group">
+                <label for="usuarioNombre">Nombre</label>
+                <input id="usuarioNombre" name="nombre" type="text" placeholder="Ejemplo: Marta Ruiz">
+            </div>
+            <div class="form-group">
+                <label for="usuarioEmail">Email</label>
+                <input id="usuarioEmail" name="email" type="email" placeholder="usuario@instituto.es">
+            </div>
+            <div class="form-group">
+                <label for="usuarioPassword">Contraseña</label>
+                <input id="usuarioPassword" name="password" type="text" placeholder="Opcional (si vacía: 123456)">
+            </div>
+            <div class="form-group">
+                <label for="usuarioRol">Rol</label>
+                <select id="usuarioRol" name="rol">
+                    <option value="profesor">Profesor</option>
+                    <option value="admin">Administrador</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="usuarioEstado">Estado</label>
+                <select id="usuarioEstado" name="estado">
+                    <option value="Activo">Activo</option>
+                    <option value="Bloqueado">Bloqueado</option>
+                </select>
+            </div>
+            <div class="management-actions">
+                <button id="btnGuardarUsuario" class="action-button action-button-primary" type="submit">Guardar usuario</button>
+                <button id="btnCancelarUsuario" class="action-button action-button-primary" type="button">Cancelar</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card table-card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Email</th>
+                    <th>Rol</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaUsuariosBody">
+                {% for usuario in usuarios %}
+                <tr data-user-id="{{ usuario.id }}">
+                    <td>{{ usuario.get_full_name|default:usuario.username }}</td>
+                    <td>{{ usuario.email }}</td>
+                    <td><span class="status-pill status-role">{{ usuario.perfil.get_rol_display }}</span></td>
+                    <td>
+                        <span class="status-pill {% if usuario.perfil.estado == 'Activo' %}status-available{% else %}status-maintenance{% endif %}">{{ usuario.perfil.estado }}</span>
+                    </td>
+                    <td>
+                        <div class="management-actions">
+                            <button class="action-button action-button-primary" type="button">Editar</button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No hay usuarios registrados.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/app.js?v=2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const usuario = getUsuarioActual();
+    if (!usuario) {
+        window.location.href = '/';
+        return;
+    }
+    const label = document.getElementById('usuarioActual');
+    if (label) {
+        label.textContent = usuario.nombre;
+    }
+});
+</script>
+{% endblock %}
+

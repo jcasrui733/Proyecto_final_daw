@@ -1,0 +1,165 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block title %}Gestión de aulas{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo">
+            Administrador
+        </div>
+        <div class="header-right">
+            <button class="hamburger-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+            <span class="usuario-actual" id="usuarioActual"></span>
+            <button class="btn-logout" onclick="logout()">Salir</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar" id="sidebarNav">
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard_admin' %}?user_email={{ user_email }}" class="nav-item">Inicio</a>
+            <a href="{% url 'gestion_aulas' %}?user_email={{ user_email }}" class="nav-item active">Gestión de aulas</a>
+            <a href="{% url 'gestion_reservas' %}?user_email={{ user_email }}" class="nav-item">Gestión de reservas</a>
+            <a href="{% url 'gestion_incidencias' %}?user_email={{ user_email }}" class="nav-item">Gestión de incidencias</a>
+            <a href="{% url 'gestion_usuarios' %}?user_email={{ user_email }}" class="nav-item">Gestión de usuarios</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <div class="page-header">
+            <h1>Gestión de aulas</h1>
+            <p>Catálogo de aulas y espacios del centro.</p>
+        </div>
+
+        {% if messages %}
+        <section class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--primary-color);">
+            {% for message in messages %}
+            <p style="margin: 0; color: var(--gray-700);">{{ message }}</p>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+    <section class="management-grid">
+        <div class="card card-stat">
+            <div class="card-icon aulas"><i class="bi bi-building"></i></div>
+            <div class="card-content">
+                <h3>Total de aulas</h3>
+                <p class="stat-number">{{ total_aulas }}</p>
+            </div>
+        </div>
+        <div class="card card-stat">
+            <div class="card-icon reservas"><i class="bi bi-check-circle"></i></div>
+            <div class="card-content">
+                <h3>Disponibles ahora</h3>
+                <p class="stat-number">{{ aulas_disponibles }}</p>
+            </div>
+        </div>
+        <div class="card card-stat">
+            <div class="card-icon incidencias"><i class="bi bi-tools"></i></div>
+            <div class="card-content">
+                <h3>En mantenimiento</h3>
+                <p class="stat-number">{{ aulas_mantenimiento }}</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="card" style="margin-bottom: 1rem;">
+        <div class="crud-toolbar">
+            <h2>Administrar aulas</h2>
+            <button id="btnNuevaAula" class="action-button action-button-primary" type="button">Añadir aula</button>
+        </div>
+
+        <form id="aulaForm" class="management-grid" style="margin-top: 1rem; display: none;" method="post" action="{% url 'gestion_aulas' %}?user_email={{ user_email }}" data-backend-save="true">
+            {% csrf_token %}
+            <input type="hidden" name="user_email" value="{{ user_email }}">
+            <input id="aulaEditIndex" name="aula_id" type="hidden" value="">
+            <div class="form-group">
+                <label for="aulaNombre">Nombre del aula</label>
+                <input id="aulaNombre" name="nombre" type="text" placeholder="Ejemplo: Aula 203">
+            </div>
+            <div class="form-group">
+                <label for="aulaTipo">Tipo</label>
+                <select id="aulaTipo" name="tipo">
+                    <option>Aula normal</option>
+                    <option>Laboratorio</option>
+                    <option>Especializada</option>
+                    <option>Zona común</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="aulaCapacidad">Capacidad</label>
+                <input id="aulaCapacidad" name="capacidad" type="number" min="1" value="25">
+            </div>
+            <div class="form-group">
+                <label for="aulaEstado">Estado</label>
+                <select id="aulaEstado" name="estado">
+                    <option>Disponible</option>
+                    <option>Ocupada</option>
+                    <option>Mantenimiento</option>
+                </select>
+            </div>
+            <div class="management-actions aula-form-actions">
+                <button id="btnGuardarAula" class="action-button action-button-primary" type="submit">Guardar aula</button>
+                <button id="btnCancelarAula" class="action-button action-button-primary" type="button">Cancelar</button>
+            </div>
+        </form>
+    </section>
+
+    <section class="card table-card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Aula</th>
+                    <th>Tipo</th>
+                    <th>Capacidad</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody id="tablaAulasBody">
+                {% for aula in aulas %}
+                <tr data-aula-id="{{ aula.id }}">
+                    <td>{{ aula.nombre }}</td>
+                    <td>{{ aula.tipo }}</td>
+                    <td>{{ aula.capacidad }}</td>
+                    <td>
+                        <span class="status-pill {% if aula.estado == 'Disponible' %}status-available{% elif aula.estado == 'Ocupada' %}status-occupied{% else %}status-maintenance{% endif %}">{{ aula.estado }}</span>
+                    </td>
+                    <td>
+                        <div class="management-actions">
+                            <button class="action-button action-button-primary" type="button">Editar</button>
+                            <a class="action-button action-button-primary" href="{% url 'gestion_reservas' %}?user_email={{ user_email }}&aula={{ aula.nombre|urlencode }}">Ver reservas</a>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5">No hay aulas registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/app.js?v=2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const usuario = getUsuarioActual();
+    if (!usuario) {
+        window.location.href = '/';
+        return;
+    }
+    const label = document.getElementById('usuarioActual');
+    if (label) {
+        label.textContent = usuario.nombre;
+    }
+});
+</script>
+{% endblock %}
+

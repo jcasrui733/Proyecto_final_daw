@@ -1,0 +1,64 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block title %}Inicio Administrador{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo">
+            Administrador
+        </div>
+        <div class="header-right">
+            <button class="hamburger-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+            <span class="usuario-actual" id="usuarioActual"></span>
+            <button class="btn-logout" onclick="logout()">Salir</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar" id="sidebarNav">
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard_admin' %}?user_email={{ user_email }}" class="nav-item active">Inicio</a>
+            <a href="{% url 'gestion_aulas' %}?user_email={{ user_email }}" class="nav-item">Gestión de aulas</a>
+            <a href="{% url 'gestion_reservas' %}?user_email={{ user_email }}" class="nav-item">Gestión de reservas</a>
+            <a href="{% url 'gestion_incidencias' %}?user_email={{ user_email }}" class="nav-item">Gestión de incidencias</a>
+            <a href="{% url 'gestion_usuarios' %}?user_email={{ user_email }}" class="nav-item">Gestión de usuarios</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <div class="page-header">
+            <h1>Bienvenido, administrador</h1>
+            <p>Panel general de control del sistema</p>
+        </div>
+
+        <section class="quick-actions">
+            <h2>Accesos rápidos</h2>
+            <div class="actions-grid">
+                <a href="{% url 'gestion_aulas' %}?user_email={{ user_email }}" class="action-btn">
+                    <span class="action-icon"><i class="bi bi-building"></i></span>
+                    Gestión de aulas
+                </a>
+                <a href="{% url 'gestion_reservas' %}?user_email={{ user_email }}" class="action-btn">
+                    <span class="action-icon"><i class="bi bi-calendar-event"></i></span>
+                    Gestión de reservas
+                </a>
+                <a href="{% url 'gestion_incidencias' %}?user_email={{ user_email }}" class="action-btn">
+                    <span class="action-icon"><i class="bi bi-exclamation-triangle"></i></span>
+                    Gestión de incidencias
+                </a>
+                <a href="{% url 'gestion_usuarios' %}?user_email={{ user_email }}" class="action-btn">
+                    <span class="action-icon"><i class="bi bi-people"></i></span>
+                    Gestión de usuarios
+                </a>
+            </div>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/app.js?v=2"></script>
+<script src="/static/dashboard-admin.js"></script>
+{% endblock %}

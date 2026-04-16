@@ -1,0 +1,129 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block title %}Gestión de incidencias{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo">
+            Administrador
+        </div>
+        <div class="header-right">
+            <button class="hamburger-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+            <span class="usuario-actual" id="usuarioActual"></span>
+            <button class="btn-logout" onclick="logout()">Salir</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar" id="sidebarNav">
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard_admin' %}?user_email={{ user_email }}" class="nav-item">Inicio</a>
+            <a href="{% url 'gestion_aulas' %}?user_email={{ user_email }}" class="nav-item">Gestión de aulas</a>
+            <a href="{% url 'gestion_reservas' %}?user_email={{ user_email }}" class="nav-item">Gestión de reservas</a>
+            <a href="{% url 'gestion_incidencias' %}?user_email={{ user_email }}" class="nav-item active">Gestión de incidencias</a>
+            <a href="{% url 'gestion_usuarios' %}?user_email={{ user_email }}" class="nav-item">Gestión de usuarios</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <div class="page-header">
+            <h1>Gestión de incidencias</h1>
+            <p>Seguimiento y cambio de estado de incidencias.</p>
+        </div>
+
+    {% if messages %}
+    <section class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--primary-color);">
+        {% for message in messages %}
+        <p style="margin: 0; color: var(--gray-700);">{{ message }}</p>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    <section class="management-grid">
+        <div class="card card-stat">
+            <div class="card-icon incidencias"><i class="bi bi-exclamation-triangle"></i></div>
+            <div class="card-content">
+                <h3>Pendientes</h3>
+                <p class="stat-number">{{ total_incidencias }}</p>
+            </div>
+        </div>
+        <div class="card card-stat">
+            <div class="card-icon aulas"><i class="bi bi-tools"></i></div>
+            <div class="card-content">
+                <h3>En curso</h3>
+                <p class="stat-number">{{ incidencias_en_curso }}</p>
+            </div>
+        </div>
+        <div class="card card-stat">
+            <div class="card-icon reservas"><i class="bi bi-check-circle"></i></div>
+            <div class="card-content">
+                <h3>Resueltas</h3>
+                <p class="stat-number">{{ incidencias_resueltas }}</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="card table-card">
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Aula</th>
+                    <th>Profesor</th>
+                    <th>Tipo</th>
+                    <th>Prioridad</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for incidencia in incidencias %}
+                <tr>
+                    <td>{{ incidencia.fecha|date:"d/m/Y" }}</td>
+                    <td>{{ incidencia.aula.nombre }}</td>
+                    <td>{{ incidencia.usuario.get_full_name|default:incidencia.usuario.username }}</td>
+                    <td>{{ incidencia.tipo }}</td>
+                    <td>{{ incidencia.prioridad }}</td>
+                    <td><span class="status-pill {% if incidencia.estado == 'Pendiente' %}status-pendiente{% elif incidencia.estado == 'En curso' %}status-en-curso{% else %}status-resuelta{% endif %}">{{ incidencia.estado }}</span></td>
+                    <td>
+                        <form method="post" action="{% url 'gestion_incidencias' %}?user_email={{ user_email }}" style="display: inline-flex; gap: 0.5rem; flex-wrap: wrap;">
+                            {% csrf_token %}
+                            <input type="hidden" name="user_email" value="{{ user_email }}">
+                            <input type="hidden" name="incidencia_id" value="{{ incidencia.id }}">
+                            <button type="submit" name="action" value="pendiente" class="action-button action-button-primary">Pendiente</button>
+                            <button type="submit" name="action" value="curso" class="action-button action-button-primary">En curso</button>
+                            <button type="submit" name="action" value="resolver" class="action-button action-button-primary">Resolver</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="7">No hay incidencias registradas.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/app.js?v=2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const usuario = getUsuarioActual();
+    if (!usuario) {
+        window.location.href = '/';
+        return;
+    }
+    const label = document.getElementById('usuarioActual');
+    if (label) {
+        label.textContent = usuario.nombre;
+    }
+});
+</script>
+{% endblock %}
+

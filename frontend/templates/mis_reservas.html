@@ -1,0 +1,119 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block title %}Mis reservas{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo">
+        </div>
+        <div class="header-right">
+            <button class="hamburger-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+            <span class="usuario-actual" id="usuarioActual"></span>
+            <button class="btn-logout" onclick="logout()">Salir</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar" id="sidebarNav">
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard_profesor' %}?user_email={{ user_email }}" class="nav-item">Inicio</a>
+            <a href="{% url 'buscar_aulas' %}?user_email={{ user_email }}" class="nav-item">Buscar aulas</a>
+            <a href="{% url 'mis_reservas' %}?user_email={{ user_email }}" class="nav-item active">Mis reservas</a>
+            <a href="{% url 'registrar_incidencia' %}?user_email={{ user_email }}" class="nav-item">Registrar incidencia</a>
+            <a href="{% url 'historial_incidencias' %}?user_email={{ user_email }}" class="nav-item">Historial de incidencias</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <div class="page-header">
+            <h1>Mis reservas</h1>
+            <p>Consulta el detalle o cancela tus reservas activas.</p>
+            <p style="margin-top: 6px; color: var(--text-soft);">El sistema valida automáticamente cada solicitud según disponibilidad y solapes.</p>
+        </div>
+
+        {% if messages %}
+        <section class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--primary-color);">
+            {% for message in messages %}
+            <p style="margin: 0; color: var(--gray-700);">{{ message }}</p>
+            {% endfor %}
+        </section>
+        {% endif %}
+
+        <section class="management-grid">
+            <div class="card card-stat">
+                <div class="card-icon reservas"><i class="bi bi-calendar-event"></i></div>
+                <div class="card-content">
+                    <h3>Totales</h3>
+                    <p class="stat-number">{{ total_reservas }}</p>
+                </div>
+            </div>
+            <div class="card card-stat">
+                <div class="card-icon aulas"><i class="bi bi-check-circle"></i></div>
+                <div class="card-content">
+                    <h3>Confirmadas</h3>
+                    <p class="stat-number">{{ total_confirmadas }}</p>
+                </div>
+            </div>
+            <div class="card card-stat">
+                <div class="card-icon incidencias"><i class="bi bi-hourglass-split"></i></div>
+                <div class="card-content">
+                    <h3>Pendientes</h3>
+                    <p class="stat-number">{{ total_pendientes }}</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="card table-card">
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Aula</th>
+                        <th>Fecha</th>
+                        <th>Horario</th>
+                        <th>Motivo</th>
+                        <th>Estado</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reserva in reservas %}
+                    <tr data-reserva-id="{{ reserva.id }}">
+                        <td>{{ reserva.aula.nombre }}</td>
+                        <td>{{ reserva.fecha|date:"d/m/Y" }}</td>
+                        <td>{{ reserva.hora_inicio|time:"H:i" }} - {{ reserva.hora_fin|time:"H:i" }}</td>
+                        <td>{{ reserva.motivo }}</td>
+                        <td><span class="status-pill {% if reserva.estado == 'Confirmada' %}status-available{% elif reserva.estado == 'Pendiente' %}status-occupied{% else %}status-maintenance{% endif %}">{{ reserva.estado }}</span></td>
+                        <td>
+                            <div class="management-actions">
+                                <button class="action-button action-button-primary" type="button">Ver reserva</button>
+                                <button class="action-button action-button-primary" type="button">Cancelar</button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">No tienes reservas registradas todavía.</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/app.js?v=2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const usuario = getUsuarioActual();
+    if (!usuario) {
+        window.location.href = '/';
+        return;
+    }
+    document.getElementById('usuarioActual').textContent = usuario.nombre;
+});
+</script>
+{% endblock %}

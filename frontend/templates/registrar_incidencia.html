@@ -1,0 +1,101 @@
+﻿{% extends 'base.html' %}
+{% load static %}
+{% block title %}Registrar incidencia{% endblock %}
+{% block content %}
+<header class="header">
+    <div class="header-content">
+        <div class="logo">
+            <img src="{% static 'img/logo.png' %}" alt="Logo">
+        </div>
+        <div class="header-right">
+            <button class="hamburger-btn" type="button" onclick="toggleSidebar()" aria-label="Abrir menu"><i class="bi bi-list"></i></button>
+            <span class="usuario-actual" id="usuarioActual"></span>
+            <button class="btn-logout" onclick="logout()">Salir</button>
+        </div>
+    </div>
+</header>
+
+<div class="main-container">
+    <aside class="sidebar" id="sidebarNav">
+        <nav class="nav-menu">
+            <a href="{% url 'dashboard_profesor' %}?user_email={{ user_email }}" class="nav-item">Inicio</a>
+            <a href="{% url 'buscar_aulas' %}?user_email={{ user_email }}" class="nav-item">Buscar aulas</a>
+            <a href="{% url 'mis_reservas' %}?user_email={{ user_email }}" class="nav-item">Mis reservas</a>
+            <a href="{% url 'registrar_incidencia' %}?user_email={{ user_email }}" class="nav-item active">Registrar incidencia</a>
+            <a href="{% url 'historial_incidencias' %}?user_email={{ user_email }}" class="nav-item">Historial de incidencias</a>
+        </nav>
+    </aside>
+
+    <main class="content">
+        <div class="page-header">
+            <h1>Registrar incidencia</h1>
+            <p>Describe el problema para que mantenimiento pueda resolverlo.</p>
+        </div>
+
+        <section class="card">
+            {% if messages %}
+            <section class="card" style="margin-bottom: 1rem; border-left: 4px solid var(--primary-color);">
+                {% for message in messages %}
+                <p style="margin: 0; color: var(--gray-700);">{{ message }}</p>
+                {% endfor %}
+            </section>
+            {% endif %}
+
+            <form method="post" action="{% url 'registrar_incidencia' %}?user_email={{ user_email }}" data-backend-save="true">
+                {% csrf_token %}
+                <input type="hidden" name="user_email" class="js-user-email" value="{{ user_email }}">
+                <div class="management-grid">
+                    <div class="form-group">
+                        <label for="aulaIncidencia">Aula</label>
+                        <select id="aulaIncidencia" name="aula_id">
+                            {% for aula in aulas %}
+                            <option value="{{ aula.id }}">{{ aula.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tipoIncidencia">Tipo</label>
+                        <select id="tipoIncidencia" name="tipo">
+                            <option>Proyector averiado</option>
+                            <option>Ordenador no funciona</option>
+                            <option>Mobiliario dañado</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="prioridad">Prioridad</label>
+                        <select id="prioridad" name="prioridad">
+                            <option>Alta</option>
+                            <option selected>Media</option>
+                            <option>Baja</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                        <label for="descripcion">Descripción</label>
+                        <textarea id="descripcion" name="descripcion" rows="5" placeholder="Describe el problema con detalle..."></textarea>
+                </div>
+
+                <div class="management-actions">
+                    <button type="submit" class="action-button action-button-primary">Guardar incidencia</button>
+                    <button type="reset" class="action-button action-button-primary">Limpiar</button>
+                </div>
+            </form>
+        </section>
+    </main>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="/static/app.js?v=2"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const usuario = getUsuarioActual();
+    if (!usuario) {
+        window.location.href = '/';
+        return;
+    }
+    document.getElementById('usuarioActual').textContent = usuario.nombre;
+});
+</script>
+{% endblock %}
