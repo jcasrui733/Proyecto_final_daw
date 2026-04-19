@@ -10,6 +10,7 @@ ALLOWED_HOSTS = [
     "192.168.100.201",
     "192.168.100.202",
     "192.168.100.203",
+    "acr-aula.freemyip.com",
     "testserver",
 ]
 

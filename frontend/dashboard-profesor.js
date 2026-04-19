@@ -1,43 +1,32 @@
-﻿// ==================== INICIALIZACIÓN DASHBOARD PROFESOR ==================== 
-
+﻿
 document.addEventListener('DOMContentLoaded', function() {
-    // Verificar sesión
     const usuario = getUsuarioActual();
     if (!usuario) {
         window.location.href = '/';
         return;
     }
 
-    // Llenar datos de usuario
     document.getElementById('usuarioNombre').textContent = usuario.nombre;
     document.getElementById('usuarioActual').textContent = usuario.nombre;
 
-    // Cargar datos
     cargarResumen();
     cargarProximasReservas();
     cargarIncidenciasRecientes();
 });
 
-// ==================== CARGAR RESUMEN ==================== 
-
 function cargarResumen() {
     const usuario = getUsuarioActual();
     
-    // Reservas del usuario
     const miReservas = reservas.filter(r => r.usuarioId === usuario.id);
     document.getElementById('totalReservas').textContent = miReservas.length;
 
-    // Incidencias del usuario
     const misIncidencias = incidencias.filter(i => i.usuarioId === usuario.id);
     document.getElementById('totalIncidencias').textContent = misIncidencias.filter(i => i.estado === 'Pendiente').length;
 
-    // Aulas disponibles
     const aulasDisp = aulas.filter(a => a.estado === 'Disponible').length;
     document.getElementById('aulasDisponibles').textContent = aulasDisp;
 }
-
-// ==================== CARGAR PRÓXIMAS RESERVAS ==================== 
-
+ 
 function cargarProximasReservas() {
     const usuario = getUsuarioActual();
     const miReservas = reservas.filter(r => r.usuarioId === usuario.id);
@@ -62,9 +51,7 @@ function cargarProximasReservas() {
         `;
     }).join('');
 }
-
-// ==================== CARGAR INCIDENCIAS RECIENTES ==================== 
-
+ 
 function cargarIncidenciasRecientes() {
     const usuario = getUsuarioActual();
     const misIncidencias = incidencias.filter(i => i.usuarioId === usuario.id);
@@ -89,5 +76,4 @@ function cargarIncidenciasRecientes() {
         `;
     }).join('');
 }
-
 
