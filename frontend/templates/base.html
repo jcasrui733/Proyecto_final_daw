@@ -14,10 +14,10 @@
             }
         })();
     </script>
-   <link rel="stylesheet" href="{% static 'dashboard.css' %}">
-    {% block dashboard_css %}
+    <!-- Añade estas dos líneas para los estilos -->
+    <link rel="stylesheet" href="{% static 'styles.css' %}">
     <link rel="stylesheet" href="{% static 'dashboard.css' %}">
-{% endblock %}
+    {% block dashboard_css %}{% endblock %}
     {% block page_css %}{% endblock %}
 </head>
 <body>
