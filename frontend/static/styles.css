@@ -1,4 +1,4 @@
-﻿/* ==================== SISTEMA DE DISEÑO ==================== */
+﻿
 
 :root {
     /* Colores */
@@ -64,7 +64,7 @@
     --shadow-lg: 0 16px 24px -4px rgba(0, 0, 0, 0.5);
 }
 
-/* ==================== RESET ==================== */
+
 
 * {
     margin: 0;
@@ -234,7 +234,7 @@ body {
     background-color: rgba(var(--primary-rgb), 0.08);
 }
 
-/* ==================== FORMULARIOS ==================== */
+
 
 .form-group {
     margin-bottom: 0.75rem;
@@ -269,7 +269,7 @@ body {
     box-shadow: 0 0 0 3px rgba(var(--primary-rgb), 0.12);
 }
 
-/* ==================== BOTONES ==================== */
+
 
 .btn-primary {
     width: 100%;
@@ -302,7 +302,7 @@ body {
     background-color: var(--gray-300);
 }
 
-/* ==================== RESPONSIVE ==================== */
+
 
 @media (max-width: 640px) {
     .theme-toggle {
@@ -320,7 +320,7 @@ body {
     }
 }
 
-/* ==================== LOGIN ==================== */
+
 
 .login-container {
     display: flex;
