@@ -16,13 +16,16 @@ services:
     restart: always
 
   web:
-    build: .
+    build:
+      context: ..
+      dockerfile: www/Dockerfile
     container_name: django_web
+    working_dir: /app
     command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn proyecto_daw.wsgi:application --bind 0.0.0.0:8000"
     env_file:
       - .env
     volumes:
-      - ./:/app
+      - ../:/app
       - static_volume:/app/staticfiles
     expose:
       - "8000"
