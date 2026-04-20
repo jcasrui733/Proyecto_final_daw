@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16-alpine
+    container_name: postgres_db
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+    restart: always
+
+  web:
+    build: .
+    container_name: django_web
+    command: sh -c "python manage.py migrate && python manage.py collectstatic --noinput && gunicorn proyecto_daw.wsgi:application --bind 0.0.0.0:8000"
+    env_file:
+      - .env
+    volumes:
+      - ./:/app
+      - static_volume:/app/staticfiles
+    expose:
+      - "8000"
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: always
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: nginx_proxy
+    depends_on:
+      - web
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro
+      - static_volume:/app/staticfiles:ro
+    restart: always
+
+volumes:
+  postgres_data:
+  static_volume:
