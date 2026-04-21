@@ -8,6 +8,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.urls import reverse
+from django.views.decorators.csrf import csrf_exempt
 
 from gestion.models import Aula, Incidencia, PerfilUsuario, Reserva
 
@@ -633,6 +634,7 @@ def gestion_usuarios(request):
         },
     )
 
+@csrf_exempt
 def api_register(request):
     if request.method != "POST":
         return JsonResponse({"ok": False, "message": "Método no permitido."}, status=405)
