@@ -214,7 +214,7 @@ function setupRegisterForm() {
             : "Crear cuenta de profesor";
     });
 
-    registerForm.addEventListener("submit", function (event) {
+    registerForm.addEventListener("submit", async function (event) {
         event.preventDefault();
 
         const nombre = (document.getElementById("registerName") || {}).value?.trim() || "";
@@ -237,33 +237,29 @@ function setupRegisterForm() {
             return;
         }
 
-        const users = getUsuariosSimulados();
-        const emailExists = users.some(function (user) {
-            return user.email === email;
-        });
+        const formData = new FormData();
+        formData.append("nombre", nombre);
+        formData.append("email", email);
+        formData.append("password", password);
 
-        if (emailExists) {
-            alert("Ya existe un usuario con ese email.");
-            return;
+        try {
+            const response = await fetch("/api/register/", {
+                method: "POST",
+                body: formData,
+                credentials: "same-origin"
+            });
+
+            const payload = await response.json();
+            if (!response.ok || !payload.ok) {
+                alert((payload && payload.message) || "No se pudo registrar el usuario.");
+                return;
+            }
+
+            alert("Usuario registrado correctamente. Ahora puedes iniciar sesión.");
+            
+        } catch (error) {
+            alert("No se pudo registrar el usuario. Inténtalo de nuevo.");
         }
-
-        const nextId = users.reduce(function (maxId, user) {
-            return Math.max(maxId, Number(user.id) || 0);
-        }, 0) + 1;
-
-        const newUser = {
-            id: nextId,
-            nombre: nombre,
-            email: email,
-            password: password,
-            rol: "profesor",
-            estado: "Activo"
-        };
-
-        users.push(newUser);
-        saveUsuariosSimulados(users);
-        localStorage.setItem("usuarioActual", JSON.stringify(newUser));
-        window.location.href = "/dashboard-profesor/?user_email=" + encodeURIComponent(email);
     });
 }
 
