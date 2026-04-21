@@ -632,3 +632,29 @@ def gestion_usuarios(request):
             "user_email": user_email,
         },
     )
+
+def api_register(request):
+    if request.method != "POST":
+        return JsonResponse({"ok": False, "message": "Método no permitido."}, status=405)
+
+    nombre = request.POST.get("nombre", "").strip()
+    email = request.POST.get("email", "").strip().lower()
+    password = request.POST.get("password", "").strip()
+
+    if not nombre or not email or not password:
+        return JsonResponse({"ok": False, "message": "Todos los campos son obligatorios."}, status=400)
+
+    if User.objects.filter(email__iexact=email).exists():
+        return JsonResponse({"ok": False, "message": "Ya existe un usuario con ese email."}, status=400)
+
+    first_name, last_name = parse_full_name(nombre)
+    user = User.objects.create_user(
+        username=email,
+        email=email,
+        password=password,
+        first_name=first_name,
+        last_name=last_name,
+    )
+    PerfilUsuario.objects.create(user=user, rol="profesor", estado="Activo")
+
+    return JsonResponse({"ok": True, "message": "Usuario registrado correctamente."})

@@ -16,4 +16,5 @@ urlpatterns = [
     path("gestion-reservas/", views.gestion_reservas, name="gestion_reservas"),
     path("gestion-incidencias/", views.gestion_incidencias, name="gestion_incidencias"),
     path("gestion-usuarios/", views.gestion_usuarios, name="gestion_usuarios"),
+    path('api/register/', views.api_register, name='api_register'),
 ]
