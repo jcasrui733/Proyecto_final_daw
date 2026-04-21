@@ -190,7 +190,15 @@ def api_login(request):
     if not email or not password:
         return JsonResponse({"ok": False, "message": "Email y contraseña son obligatorios."}, status=400)
 
+    # Primero intenta autenticar usando el email como username (por compatibilidad con tu sistema actual)
     user = authenticate(request, username=email, password=password)
+    if not user:
+        # Si falla, busca el usuario por email y autentica con su username real
+        try:
+            user_obj = User.objects.get(email__iexact=email)
+            user = authenticate(request, username=user_obj.username, password=password)
+        except User.DoesNotExist:
+            user = None
     if not user:
         return JsonResponse({"ok": False, "message": "Email o contraseña incorrectos."}, status=401)
 
