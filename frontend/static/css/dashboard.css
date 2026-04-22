@@ -823,5 +823,25 @@
         align-items: flex-start;
     }
 
+
+    @media (max-width: 640px) {
+    /* Cambia el texto "Administrador" por "Admin" y lo hace más pequeño */
+    .usuario-actual::after {
+        content: "Admin";
+        font-size: 12px !important;
+        max-width: 60px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: inline-block;
+        vertical-align: middle;
+        white-space: nowrap;
+        color: #cbd5e1;
+        margin-left: 4px;
+    }
+    .usuario-actual {
+        font-size: 0 !important; /* Oculta el texto original en móvil */
+    }
+}
+
 }
 
