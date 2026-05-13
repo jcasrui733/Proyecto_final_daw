@@ -1,4 +1,15 @@
-﻿
+﻿/* Ajuste del header para modo responsive solo para admin */
+@media (max-width: 640px) {
+    .header-admin {
+        font-size: 1.05rem !important;
+        letter-spacing: 0.5px;
+        max-width: 100vw;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
 :root {
     --white: #fff;
     --gray-50: #f8fafc;
