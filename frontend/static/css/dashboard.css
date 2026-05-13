@@ -1,26 +1,9 @@
-﻿@media (prefers-color-scheme: dark), [data-theme="dark"] {
-    .page-header h1,
-    .page-header h2,
-    .quick-actions h2,
-    .upcoming-section h2,
-    .recent-section h2,
-    .crud-toolbar h2 {
-        color: #fff !important;
-    }
+﻿.page-header p {
+    color: var(--gray-500);
+    margin-bottom: 1.2em;
 }
-@media (prefers-color-scheme: dark), [data-theme="dark"] {
-    .page-header h1,
-    .quick-actions h2,
-    .stat-number,
-    .card-content h3,
-    .upcoming-section h2,
-    .recent-section h2,
-    .crud-toolbar h2,
-    .item-info h3 {
-        color: #fff !important;
-    }
-}
-/* Ajuste del header para modo responsive solo para admin */
+
+
 @media (max-width: 640px) {
     .header-admin {
         font-size: 1.05rem !important;
@@ -197,22 +180,35 @@
     padding: var(--spacing-2xl);
 }
 
-.page-header {
-    margin-bottom: var(--spacing-2xl);
-}
-
 .page-header h1 {
     font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin-bottom: 0.25em;
+    color: var(--gray-700);
+}
+
+@media (prefers-color-scheme: dark), [data-theme="dark"] {
+    .page-header h1 {
+        color: var(--gray-500);
+    }
+}
+
+@media (prefers-color-scheme: dark), [data-theme="dark"] {
+    .page-header h1 {
+        color: var(--gray-500);
+    }
+}
+    font-size: var(--font-size-2xl);
+    font-weight: 700;
+    margin-bottom: 0.25em;
     color: var(--gray-900);
-    margin-bottom: var(--spacing-sm);
 }
 
-.page-header p {
-    color: var(--gray-500);
-    font-size: var(--font-size-sm);
+@media (prefers-color-scheme: dark), [data-theme="dark"] {
+    .page-header h1 {
+        color: var(--gray-500);
+    }
 }
-
-
 .card {
     background-color: var(--white);
     border: 1px solid var(--gray-200);
@@ -860,4 +856,7 @@
     
 
 }
+
+
+
 
