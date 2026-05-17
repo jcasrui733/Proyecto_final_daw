@@ -1,4 +1,3 @@
-﻿
 document.addEventListener('DOMContentLoaded', function() {
     const usuario = getUsuarioActual();
     if (!usuario) {
@@ -76,4 +75,3 @@ function cargarIncidenciasRecientes() {
         `;
     }).join('');
 }
-
