@@ -173,7 +173,7 @@
     border-left-color: var(--primary-color);
 }
 
-/* ==================== CONTENIDO PRINCIPAL ==================== */
+
 
 .content {
     flex: 1;
@@ -425,7 +425,7 @@
     color: var(--primary-dark);
 }
 
-/* Buscar aulas: unificar aspecto de filtros (fecha, tramo y capacidad) */
+
 #fechaBusqueda,
 #tramoBusqueda,
 #capacidadMinima {
@@ -477,7 +477,7 @@
     font-size: var(--font-size-sm);
 }
 
-/* Ajuste puntual: en Buscar aulas el select de tramo se mantiene claro en modo oscuro */
+
 [data-theme="dark"] #tramoBusqueda,
 [data-theme="dark"] #tramoBusqueda option,
 [data-theme="dark"] #fechaBusqueda,

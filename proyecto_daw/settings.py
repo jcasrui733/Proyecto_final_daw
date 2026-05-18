@@ -88,7 +88,6 @@ USE_I18N = True
 USE_TZ = True
 
 
-# ...existing code...
 
 STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
