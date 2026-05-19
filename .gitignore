@@ -17,6 +17,9 @@ db.sqlite3
 media/
 staticfiles/
 
+# Entornos y secretos
+.env
+
 # Tooling caches
 .pytest_cache/
 .mypy_cache/
